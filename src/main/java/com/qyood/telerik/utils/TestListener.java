@@ -5,6 +5,7 @@ import org.testng.*;
 import java.io.IOException;
 
 public class TestListener implements ISuiteListener, IInvokedMethodListener, IExecutionListener {
+    PropertyReader propertyReader;
 
     @Override
     public void onExecutionStart() {
@@ -42,11 +43,14 @@ public class TestListener implements ISuiteListener, IInvokedMethodListener, IEx
 
     @Override
     public void onFinish(ISuite suite) {
-        String command = "cmd /c start \"\" cmd.exe /K \"cd /d" + System.getProperty("user.dir") + "&& allure generate --single-file --clean\"";
-        try {
-            Runtime.getRuntime().exec(command);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        propertyReader = new PropertyReader("./src/main/resources/Environment.properties");
+        if(Boolean.valueOf(propertyReader.getProperty("openAllureReport")).equals(Boolean.TRUE)) {
+            String command = "cmd /c start \"\" cmd.exe /K \"cd /d" + System.getProperty("user.dir") + "&& allure generate --single-file --clean\"";
+            try {
+                Runtime.getRuntime().exec(command);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
