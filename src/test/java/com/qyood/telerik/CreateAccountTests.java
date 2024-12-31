@@ -59,7 +59,7 @@ public class CreateAccountTests {
     public void setUp() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        testData = new JsonReader("/src/test/resources/createAccountTests.json");
+        testData = new JsonReader("./src/test/resources/createAccountTests.json");
     }
 
     @AfterMethod

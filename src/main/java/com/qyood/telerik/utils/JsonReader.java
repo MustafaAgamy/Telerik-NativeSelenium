@@ -2,13 +2,15 @@ package com.qyood.telerik.utils;
 
 import io.restassured.path.json.JsonPath;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class JsonReader {
     private JsonPath jsonPath;
-
+    private FileReader fileReader;
     /**
      * Constructor to load properties from the given relative path.
      *
@@ -17,8 +19,8 @@ public class JsonReader {
      */
     public JsonReader(String relativePath) {
         try {
-            String jsonContent = new String(Files.readAllBytes(Paths.get(System.getProperty("user.dir") + relativePath)));
-            jsonPath = JsonPath.from(jsonContent);
+            fileReader = new FileReader(new File(relativePath).getAbsolutePath());
+            jsonPath = JsonPath.from(fileReader);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
