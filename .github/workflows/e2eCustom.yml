@@ -24,22 +24,27 @@ jobs:
           echo "::set-output name=selected::$browsers"
       - name: Get Latest Allure Version
         id: allure_version
+        shell: pwsh
         run: |
-          $allure_version = (Invoke-RestMethod -Uri "https://api.github.com/repos/allure-framework/allure2/releases/latest").tag_name
+          $allure_version = Invoke-RestMethod -Uri "https://api.github.com/repos/allure-framework/allure2/releases/latest").tag_name
           echo "Latest Allure version: $allure_version"
           echo "::set-output name=version::$allure_version"
       - name: Download Allure
+        shell: pwsh
         run: |
             $version = "${{ steps.allure_version.outputs.version }}"
             Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/$version/allure-$version.zip" -OutFile "allure.zip"
       - name: Extract Allure
+        shell: pwsh
         run: Expand-Archive -Path "allure.zip" -DestinationPath "$env:ProgramFiles"
       - name: Add Allure to PATH
+        shell: pwsh
         run: | 
             $allurePath = Join-Path $env:ProgramFiles "allure-${{ github.event.inputs.allureVersion }}\bin" 
             $env:PATH = "$allurePath;$env:PATH"
             echo $env:PATH
       - name: Verify Allure Installation
+        shell: pwsh
         run: |
             $allurePath = Join-Path $env:ProgramFiles "allure-${{ github.event.inputs.allureVersion }}\bin\allure.bat"
             if (Test-Path $allurePath) {
