@@ -1,0 +1,13 @@
+{
+  "email" : "testForAutomationPurposes@gmail.com",
+  "password" : "testtest",
+  "firstName" : "testFirstName",
+  "lastName" : "testLastName",
+  "company" : "Qyood",
+  "phone" : "011667895",
+  "country" : "Egypt",
+  "demosPageTitle" : "Demos",
+  "freeTrialPageSubTitle" : "Free Trials",
+  "loginPageTitle" : "Enter Your Email to Sign in",
+  "signUpPageTitle" : "Create an Account"
+}
