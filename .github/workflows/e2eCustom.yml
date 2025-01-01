@@ -9,7 +9,9 @@ on:
       browsers:
         description: 'Comma-separated list of browsers to execute tests against (e.g., chrome,firefox,edge)'
         default: 'all'
-
+      allureVersion:
+        description: 'Version of allure'
+        default: '2.32.0'
 jobs:
   preprocess:
     runs-on: ubuntu-latest
@@ -42,18 +44,18 @@ jobs:
         with:
           maven-version: 3.9.6
       - name: Download and Install Allure
-        run: Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/2.14.0/allure-2.14.0.zip" -OutFile "allure.zip"
+        run: Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/${{ github.event.inputs.allureVersion }}/allure-${{ github.event.inputs.allureVersion }}.zip" -OutFile "allure.zip"
       - name: Extract Allure
         run: Expand-Archive -Path "allure.zip" -DestinationPath "$env:ProgramFiles"
       - name: Add Allure to PATH
         run: | 
-          $allurePath = Join-Path $env:ProgramFiles "allure-2.14.0\bin" 
+          $allurePath = Join-Path $env:ProgramFiles "allure-${{ github.event.inputs.allureVersion }}\bin" 
           $env:PATH = "$allurePath;$env:PATH"
           echo $env:PATH
       - name: Verify Allure Installation
         run: |
           # Verify allure command is available
-          $allurePath = Join-Path $env:ProgramFiles "allure-2.14.0\bin\allure.bat"
+          $allurePath = Join-Path $env:ProgramFiles "allure-${{ github.event.inputs.allureVersion }}\bin\allure.bat"
           if (Test-Path $allurePath) {
             Write-Host "Allure is correctly installed."
           } else {
