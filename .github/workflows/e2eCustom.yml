@@ -26,7 +26,7 @@ jobs:
   E2E_Chrome_Windows_Test:
     runs-on: windows-latest
     needs: preprocess
-    if: contains(needs.preprocess.outputs.selected, 'chrome,all')
+    if: contains(needs.preprocess.outputs.selected, 'chrome') || contains(needs.preprocess.outputs.selected, 'all')
     permissions:
       checks: write
     steps:
@@ -55,7 +55,7 @@ jobs:
   E2E_Firefox_Windows_Test:
     runs-on: windows-latest
     needs: preprocess
-    if: contains(needs.preprocess.outputs.selected, 'firefox,all')
+    if: contains(needs.preprocess.outputs.selected, 'firefox') || contains(needs.preprocess.outputs.selected, 'all')
     permissions:
       checks: write
     steps:
@@ -84,7 +84,7 @@ jobs:
   E2E_Edge_Windows_Test:
     runs-on: windows-latest
     needs: preprocess
-    if: contains(needs.preprocess.outputs.selected, 'edge,all')
+    if: contains(needs.preprocess.outputs.selected, 'edge') || contains(needs.preprocess.outputs.selected, 'all')
     permissions:
       checks: write
     steps:
