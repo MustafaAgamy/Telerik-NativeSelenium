@@ -6,10 +6,27 @@ on:
       testsPath:
         description: 'Path to Tests to be Executed'
         default: ''
+      browsers:
+        description: 'Comma-separated list of browsers to execute tests against (e.g., chrome,firefox,edge,safari)'
+        default: 'chrome,firefox'
 
 jobs:
+  preprocess:
+    runs-on: ubuntu-latest
+    outputs:
+      selected: ${{ steps.process.outputs.selected }}
+    steps:
+      - name: Process Browser Input
+        id: process
+        run: |
+          browsers="${{ github.event.inputs.browsers }}"
+          echo "Selected browsers: $browsers"
+          echo "::set-output name=selected::$browsers"
+
   E2E_Chrome_Linux_Test:
     runs-on: ubuntu-latest
+    needs: preprocess
+    if: contains(needs.preprocess.outputs.selected, 'chrome')
     permissions:
       checks: write
     steps:
@@ -24,38 +41,26 @@ jobs:
         uses: stCarolas/setup-maven@v5
         with:
           maven-version: 3.9.6
+      - name: Install Allure on Linux
+        run: |
+          curl -o allure https://raw.githubusercontent.com/allure-framework/allure2/master/bin/allure
+          chmod +x allure
+          sudo mv allure /usr/local/bin/allure
       - name: Run Tests
         continue-on-error: true
-        run: mvn test -DtargetBrowserName="chrome" -DexecutionAddress="local" -DtargetOperatingSystem="LINUX" -DheadlessExecution="true" -DwhenToTakePageSourceSnapshot="FailuresOnly" -DscreenshotParams_whenToTakeAScreenshot="FailuresOnly" -Dtest="${{ github.event.inputs.testsPath }}"
+        run: mvn test -DtargetBrowserName="chrome" -DexecutionAddress="local" -DtargetOperatingSystem="LINUX" -DheadlessExecution="true" -Dtest="${{ github.event.inputs.testsPath }}"
+      - name: Generate Allure Report
+        run: allure generate --single-file -o allure-report
       - name: Upload Allure Report as Artifact
         uses: actions/upload-artifact@v3
         with:
           name: Chrome_Linux_Allure
-          path: "allure-report/*_AllureReport.html"
-      - name: Upload Execution Summary Report as Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: Chrome_Linux_Summary
-          path: "execution-summary/ExecutionSummaryReport_*.html"
-#      - name: Publish Report
-#        continue-on-error: true
-#        uses: dorny/test-reporter@v1
-#        if: success() || failure()
-#        with:
-#          name: Tests Report Chrome_Linux
-#          path: 'target/surefire-reports/TEST-*.xml'
-#          reporter: java-junit
-      - name: Publish Test Results
-        continue-on-error: true
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          check_name: "Tests Results Chrome_Linux"
-          files: |
-            target/surefire-reports/TEST-*.xml
+          path: allure-report/*
 
   E2E_Firefox_Linux_Test:
     runs-on: ubuntu-latest
+    needs: preprocess
+    if: contains(needs.preprocess.outputs.selected, 'firefox')
     permissions:
       checks: write
     steps:
@@ -70,38 +75,26 @@ jobs:
         uses: stCarolas/setup-maven@v5
         with:
           maven-version: 3.9.6
+      - name: Install Allure on Linux
+        run: |
+          curl -o allure https://raw.githubusercontent.com/allure-framework/allure2/master/bin/allure
+          chmod +x allure
+          sudo mv allure /usr/local/bin/allure
       - name: Run Tests
         continue-on-error: true
-        run: mvn test -DtargetBrowserName="firefox" -DexecutionAddress="local" -DtargetOperatingSystem="LINUX" -DheadlessExecution="true" -DwhenToTakePageSourceSnapshot="FailuresOnly" -DscreenshotParams_whenToTakeAScreenshot="FailuresOnly" -Dtest="${{ github.event.inputs.testsPath }}"
+        run: mvn test -DtargetBrowserName="firefox" -DexecutionAddress="local" -DtargetOperatingSystem="LINUX" -DheadlessExecution="true" -Dtest="${{ github.event.inputs.testsPath }}"
+      - name: Generate Allure Report
+        run: allure generate --single-file -o allure-report
       - name: Upload Allure Report as Artifact
         uses: actions/upload-artifact@v3
         with:
           name: Firefox_Linux_Allure
-          path: "allure-report/*_AllureReport.html"
-      - name: Upload Execution Summary Report as Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: Firefox_Linux_Summary
-          path: "execution-summary/ExecutionSummaryReport_*.html"
-#      - name: Publish Report
-#        continue-on-error: true
-#        uses: dorny/test-reporter@v1
-#        if: success() || failure()
-#        with:
-#          name: Tests Report Firefox_Linux
-#          path: 'target/surefire-reports/TEST-*.xml'
-#          reporter: java-junit
-      - name: Publish Test Results
-        continue-on-error: true
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          check_name: "Tests Results Firefox_Linux"
-          files: |
-            target/surefire-reports/TEST-*.xml
+          path: allure-report/*
 
   E2E_Edge_Windows_Test:
     runs-on: windows-latest
+    needs: preprocess
+    if: contains(needs.preprocess.outputs.selected, 'edge')
     permissions:
       checks: write
     steps:
@@ -118,37 +111,20 @@ jobs:
           maven-version: 3.9.6
       - name: Run Tests
         continue-on-error: true
-        run: mvn test -DtargetBrowserName="microsoftedge" -DexecutionAddress="local" -DtargetOperatingSystem="WINDOWS" -DwhenToTakePageSourceSnapshot="FailuresOnly" -DscreenshotParams_whenToTakeAScreenshot="FailuresOnly" -Dtest="${{ github.event.inputs.testsPath }}"
+        run: mvn test -DtargetBrowserName="microsoftedge" -DexecutionAddress="local" -DtargetOperatingSystem="WINDOWS" -Dtest="${{ github.event.inputs.testsPath }}"
+      - name: Generate Allure Report
+        run: |
+          .\allure.bat generate --single-file -o allure-report
       - name: Upload Allure Report as Artifact
         uses: actions/upload-artifact@v3
         with:
           name: Edge_Windows_Allure
-          path: "allure-report/*_AllureReport.html"
-      - name: Upload Execution Summary Report as Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: Edge_Windows_Summary
-          path: "execution-summary/ExecutionSummaryReport_*.html"
-#      - name: Publish Report
-#        continue-on-error: true
-#        uses: dorny/test-reporter@v1
-#        if: success() || failure()
-#        with:
-#          name: Tests Report Edge_Windows
-#          path: 'target/surefire-reports/TEST-*.xml'
-#          reporter: java-junit
-      - name: Publish Test Results
-        continue-on-error: true
-        uses: EnricoMi/publish-unit-test-result-action/composite@v2
-        if: always()
-        with:
-          check_name: "Tests Results Edge_Windows"
-          files: |
-            target/surefire-reports/TEST-*.xml
-
+          path: allure-report/*
 
   E2E_Safari_MacOS_Test:
     runs-on: macos-latest
+    needs: preprocess
+    if: contains(needs.preprocess.outputs.selected, 'safari')
     permissions:
       checks: write
     steps:
@@ -165,30 +141,11 @@ jobs:
           maven-version: 3.9.6
       - name: Run Tests
         continue-on-error: true
-        run: mvn test -DtargetBrowserName="safari" -DexecutionAddress="local" -DtargetOperatingSystem="MAC" -DwhenToTakePageSourceSnapshot="FailuresOnly" -DscreenshotParams_whenToTakeAScreenshot="FailuresOnly" -Dtest="${{ github.event.inputs.testsPath }}"
+        run: mvn test -DtargetBrowserName="safari" -DexecutionAddress="local" -DtargetOperatingSystem="MAC" -Dtest="${{ github.event.inputs.testsPath }}"
+      - name: Generate Allure Report
+        run: allure generate --single-file -o allure-report
       - name: Upload Allure Report as Artifact
         uses: actions/upload-artifact@v3
         with:
           name: Safari_MacOS_Allure
-          path: "allure-report/*_AllureReport.html"
-      - name: Upload Execution Summary Report as Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: Safari_MacOS_Summary
-          path: "execution-summary/ExecutionSummaryReport_*.html"
-#      - name: Publish Report
-#        continue-on-error: true
-#        uses: dorny/test-reporter@v1
-#        if: success() || failure()
-#        with:
-#          name: Tests Report Safari_MacOS
-#          path: 'target/surefire-reports/TEST-*.xml'
-#          reporter: java-junit
-      - name: Publish Test Results
-        continue-on-error: true
-        uses: EnricoMi/publish-unit-test-result-action/composite@v2
-        if: always()
-        with:
-          check_name: "Tests Results Safari_MacOS"
-          files: |
-            target/surefire-reports/TEST-*.xml
+          path: allure-report/*
