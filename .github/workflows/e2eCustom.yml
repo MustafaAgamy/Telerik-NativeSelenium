@@ -8,7 +8,7 @@ on:
         default: ''
       browsers:
         description: 'Comma-separated list of browsers to execute tests against (e.g., chrome,firefox,edge)'
-        default: 'chrome,firefox,edge'
+        default: 'all'
 
 jobs:
   preprocess:
@@ -26,7 +26,7 @@ jobs:
   E2E_Chrome_Windows_Test:
     runs-on: windows-latest
     needs: preprocess
-    if: contains(needs.preprocess.outputs.selected, 'chrome')
+    if: contains(needs.preprocess.outputs.selected, 'chrome,all')
     permissions:
       checks: write
     steps:
@@ -55,7 +55,7 @@ jobs:
   E2E_Firefox_Windows_Test:
     runs-on: windows-latest
     needs: preprocess
-    if: contains(needs.preprocess.outputs.selected, 'firefox')
+    if: contains(needs.preprocess.outputs.selected, 'firefox,all')
     permissions:
       checks: write
     steps:
@@ -84,7 +84,7 @@ jobs:
   E2E_Edge_Windows_Test:
     runs-on: windows-latest
     needs: preprocess
-    if: contains(needs.preprocess.outputs.selected, 'edge')
+    if: contains(needs.preprocess.outputs.selected, 'edge,all')
     permissions:
       checks: write
     steps:
