@@ -102,7 +102,7 @@ jobs:
       - name: Run Tests on Edge
         continue-on-error: true
         run: mvn test -DtargetBrowserName="microsoftedge" -DexecutionAddress="local" -DtargetOperatingSystem="WINDOWS" -DheadlessExecution="true" -Dtest="${{ github.event.inputs.testsPath }}"
-      - name: Generate Allure Report
+      # - name: Generate Allure Report
       #   run: .\allure.bat generate --single-file -o allure-report
       # - name: Upload Allure Report as Artifact
       #   uses: actions/upload-artifact@v3
