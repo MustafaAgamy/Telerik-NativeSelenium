@@ -46,8 +46,19 @@ jobs:
       - name: Extract Allure
         run: Expand-Archive -Path "allure.zip" -DestinationPath "$env:ProgramFiles"
       - name: Add Allure to PATH
-        run: $allurePath = Join-Path $env:ProgramFiles "allure-2.14.0\bin" 
-             $env:PATH = "$allurePath;$env:PATH"
+        run: | 
+          $allurePath = Join-Path $env:ProgramFiles "allure-2.14.0\bin" 
+          $env:PATH = "$allurePath;$env:PATH"
+          echo $env:PATH
+      - name: Verify Allure Installation
+        run: |
+          # Verify allure command is available
+          $allurePath = Join-Path $env:ProgramFiles "allure-2.14.0\bin\allure.bat"
+          if (Test-Path $allurePath) {
+            Write-Host "Allure is correctly installed."
+          } else {
+            Write-Error "Allure command not found!"
+          }
       - name: Run Tests on Chrome
         continue-on-error: true
         run: mvn test -DtargetBrowserName="chrome" -DexecutionAddress="local" -DtargetOperatingSystem="WINDOWS" -DheadlessExecution="true" -Dtest="${{ github.event.inputs.testsPath }}"
