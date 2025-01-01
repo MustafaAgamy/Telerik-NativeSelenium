@@ -8,7 +8,7 @@ import org.openqa.selenium.WebDriver;
 public class DemosPage {
     private WebDriver driver;
 
-    private final By demosPageTitle_h1 = By.tagName("h1");
+    private final By demosPageTitle_h1 = By.xpath("//h1[contains(@class,'mb0')]");
     private final By getFreeTrialButton_a = By.xpath("//a[@href='/download' and contains(@class, 'Button')]");
 
     public DemosPage(WebDriver driver) {
