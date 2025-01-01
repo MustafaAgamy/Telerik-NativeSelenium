@@ -14,6 +14,10 @@ public class Actions {
             JavascriptExecutor javascriptExecutor = (JavascriptExecutor) driver;
             javascriptExecutor.executeScript("arguments[0].click();",
                     Finder.elementVisibility(locator, driver));
+        } catch (Exception e) {
+            JavascriptExecutor javascriptExecutor = (JavascriptExecutor) driver;
+            javascriptExecutor.executeScript("arguments[0].click();",
+                    Finder.elementPresence(locator, driver));
         }
     }
 
@@ -24,10 +28,18 @@ public class Actions {
             JavascriptExecutor javascriptExecutor = (JavascriptExecutor) driver;
             javascriptExecutor.executeScript("arguments[0].click();",
                     Finder.elementVisibility(locator, driver));
+        } catch (Exception e) {
+            JavascriptExecutor javascriptExecutor = (JavascriptExecutor) driver;
+            javascriptExecutor.executeScript("arguments[0].click();",
+                    Finder.elementPresence(locator, driver));
         }
     }
 
     public static String getText(final By locator, final  WebDriver driver) {
-        return Finder.elementVisibility(locator, driver).getText();
+        try {
+            return Finder.elementVisibility(locator, driver).getText();
+        } catch (Exception e) {
+            return Finder.elementPresence(locator, driver).getText();
+        }
     }
 }
