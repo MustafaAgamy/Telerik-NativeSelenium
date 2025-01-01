@@ -48,7 +48,7 @@ jobs:
           sudo mv allure /usr/local/bin/allure
       - name: Run Tests
         continue-on-error: true
-        run: mvn test -DtargetBrowserName="chrome" -DexecutionAddress="local" -DtargetOperatingSystem="LINUX" -DheadlessExecution="true" -Dtest="${{ github.event.inputs.testsPath }}"
+        run: mvn test -DtargetBrowserName="chrome" -DexecutionAddress="local" -DtargetOperatingSystem="LINUX" -DheadlessExecution="true" -DchromeOptionsArgs="--disable-dev-shm-usage,--no-sandbox" -Dtest="${{ github.event.inputs.testsPath }}"
       - name: Generate Allure Report
         run: allure generate --single-file -o allure-report
       - name: Upload Allure Report as Artifact
