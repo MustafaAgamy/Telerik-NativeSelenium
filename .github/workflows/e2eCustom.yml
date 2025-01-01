@@ -42,11 +42,12 @@ jobs:
         with:
           maven-version: 3.9.6
       - name: Download and Install Allure
-        run:
-            Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/2.14.0/allure-2.14.0.zip" -OutFile "allure.zip"
-            Expand-Archive -Path allure.zip -DestinationPath $env:ProgramFiles
-            $allurePath = Join-Path $env:ProgramFiles "allure-2.14.0\bin"
-            $env:PATH = "$allurePath;$env:PATH"
+        run: Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/2.14.0/allure-2.14.0.zip" -OutFile "allure.zip"
+      - name: Extract Allure
+        run: Expand-Archive -Path "allure.zip" -DestinationPath "$env:ProgramFiles"
+      - name: Add Allure to PATH
+        run: $allurePath = Join-Path $env:ProgramFiles "allure-2.14.0\bin" 
+             $env:PATH = "$allurePath;$env:PATH"
       - name: Run Tests on Chrome
         continue-on-error: true
         run: mvn test -DtargetBrowserName="chrome" -DexecutionAddress="local" -DtargetOperatingSystem="WINDOWS" -DheadlessExecution="true" -Dtest="${{ github.event.inputs.testsPath }}"
