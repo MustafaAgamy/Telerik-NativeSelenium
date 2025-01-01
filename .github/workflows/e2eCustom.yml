@@ -41,27 +41,22 @@ jobs:
         uses: stCarolas/setup-maven@v5
         with:
           maven-version: 3.9.6
+      - name: Download and Install Allure
+        run:
+            Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/2.14.0/allure-2.14.0.zip" -OutFile "allure.zip"
+            Expand-Archive -Path allure.zip -DestinationPath $env:ProgramFiles
+            $allurePath = Join-Path $env:ProgramFiles "allure-2.14.0\bin"
+            $env:PATH = "$allurePath;$env:PATH"
       - name: Run Tests on Chrome
         continue-on-error: true
         run: mvn test -DtargetBrowserName="chrome" -DexecutionAddress="local" -DtargetOperatingSystem="WINDOWS" -DheadlessExecution="true" -Dtest="${{ github.event.inputs.testsPath }}"
-      - name: Load test report history
-        uses: actions/checkout@v3
-        if: always()
-        continue-on-error: true
+      - name: Generate Allure Report
+        run: allure generate build/allure-results --single-file -o allure-report
+      - name: Upload Allure Report as Artifact
+        uses: actions/upload-artifact@v3
         with:
-          path: "allure-results/"
-      - name: Build test report
-        uses: simple-elf/allure-report-action@v1.7
-        if: always()
-        with:
-          allure_history: allure-history
-          allure_results: build/allure-results
-      - name: Publish test report
-        uses: peaceiris/actions-gh-pages@v3
-        if: always()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-history
+          name: Allure_Report
+          path: allure-report/*
       # - name: Generate Allure Report
       #   run: .\allure.bat generate --single-file -o allure-report
       # - name: Upload Allure Report as Artifact
