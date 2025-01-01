@@ -8,7 +8,7 @@ import org.openqa.selenium.WebDriver;
 public class RegisterAccountPage {
     private WebDriver driver;
 
-    private final By signUpPageTitle_h4 = By.tagName("h4");
+    private final By signUpPageTitle_h4 = By.xpath("//h4[contains(@class,'mt20')]");
     private final By passwordField_input = By.id("password");
     private final By firstNameField_input = By.id("fist-name");
     private final By lastNameField_input = By.id("last-name");
