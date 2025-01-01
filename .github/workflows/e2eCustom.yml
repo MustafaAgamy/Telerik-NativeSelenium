@@ -44,13 +44,13 @@ jobs:
       - name: Run Tests on Chrome
         continue-on-error: true
         run: mvn test -DtargetBrowserName="chrome" -DexecutionAddress="local" -DtargetOperatingSystem="WINDOWS" -DheadlessExecution="true" -Dtest="${{ github.event.inputs.testsPath }}"
-      - name: Generate Allure Report
-        run: .\allure.bat generate --single-file -o allure-report
-      - name: Upload Allure Report as Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: Chrome_Windows_Allure
-          path: allure-report/*
+      # - name: Generate Allure Report
+      #   run: .\allure.bat generate --single-file -o allure-report
+      # - name: Upload Allure Report as Artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: Chrome_Windows_Allure
+      #     path: allure-report/*
 
   E2E_Firefox_Windows_Test:
     runs-on: windows-latest
@@ -73,13 +73,13 @@ jobs:
       - name: Run Tests on Firefox
         continue-on-error: true
         run: mvn test -DtargetBrowserName="firefox" -DexecutionAddress="local" -DtargetOperatingSystem="WINDOWS" -DheadlessExecution="true" -Dtest="${{ github.event.inputs.testsPath }}"
-      - name: Generate Allure Report
-        run: .\allure.bat generate --single-file -o allure-report
-      - name: Upload Allure Report as Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: Firefox_Windows_Allure
-          path: allure-report/*
+      # - name: Generate Allure Report
+      #   run: .\allure.bat generate --single-file -o allure-report
+      # - name: Upload Allure Report as Artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: Firefox_Windows_Allure
+      #     path: allure-report/*
 
   E2E_Edge_Windows_Test:
     runs-on: windows-latest
@@ -103,9 +103,9 @@ jobs:
         continue-on-error: true
         run: mvn test -DtargetBrowserName="microsoftedge" -DexecutionAddress="local" -DtargetOperatingSystem="WINDOWS" -DheadlessExecution="true" -Dtest="${{ github.event.inputs.testsPath }}"
       - name: Generate Allure Report
-        run: .\allure.bat generate --single-file -o allure-report
-      - name: Upload Allure Report as Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: Edge_Windows_Allure
-          path: allure-report/*
+      #   run: .\allure.bat generate --single-file -o allure-report
+      # - name: Upload Allure Report as Artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: Edge_Windows_Allure
+      #     path: allure-report/*
