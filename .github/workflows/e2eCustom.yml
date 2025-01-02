@@ -70,13 +70,15 @@ jobs:
       - name: Verify Allure Installation
         shell: pwsh
         run: |
-          # Check if the operating system is Windows
           if ($env:OS -eq "Windows_NT") {
+          Write-Host "OS is Windows"
+          
           # Define the path for Windows
-          $allurePath = Join-Path $env:ProgramFiles "allure-\bin\allure.bat"
+          $allurePath = Join-Path $env:ProgramFiles "allure\$allure_version\bin\allure.bat"
           } else {
+          Write-Host "OS isn't windows"
             # Define the path for non-Windows (Linux or macOS)
-            $allurePath = "/usr/local/bin/allure/allure"
+            $allurePath = "/usr/local/bin/allure-$allure_version/allure"
           }
         
           # Check if the Allure executable exists
