@@ -39,7 +39,7 @@ jobs:
         shell: pwsh
         run: |
             $version = "${{ steps.allure_version.outputs.version }}"
-                $destinationPath = "$env:ProgramFiles\Allure"
+            $destinationPath = "$(Build.SourcesDirectory)/allure"
             if (-not (Test-Path -Path $destinationPath)) {
                 New-Item -ItemType Directory -Path $destinationPath -Force
             }
@@ -51,16 +51,10 @@ jobs:
         shell: pwsh
         run: |
             $version = "${{ steps.allure_version.outputs.version }}"
-            $programFiles = $env:ProgramFiles
-           
-            # Construct the allure path
-            $allurePath = Join-Path $programFiles "Allure\allure-$version\bin"
-
-            # Add the allure path to the system PATH
-            $NewPath = (([Environment]::GetEnvironmentVariable("PATH", "User") -split ";") | ?{ $_ -and $_ -notlike "*\allure-*\bin" }) -join ";"
-            [Environment]::SetEnvironmentVariable("PATH", "$NewPath;$allurePath", "User")
-            # Output the updated PATH
-            Write-Output $env:PATH
+            $destinationPath = "$(Build.SourcesDirectory)\allure\bin"
+          
+            $env:PATH = "$destinationPath;$env:PATH"
+            Write-Output "Allure has been added to the PATH"
       - name: Verify Allure Installation
         shell: pwsh
         run: |
@@ -68,7 +62,7 @@ jobs:
           Write-Host "OS is Windows"
           
           # Define the path for Windows
-          $allurePath = Join-Path $env:ProgramFiles "Allure\allure-$version\bin\allure.bat"
+          $allurePath = "$(Build.SourcesDirectory)\Allure\allure-$version\bin\allure.bat"
 
           # Check if the Allure executable exists
           if (Test-Path $allurePath) {
