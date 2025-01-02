@@ -55,10 +55,23 @@ jobs:
             Write-Output "Allure has been extracted to $destinationPath"
       - name: Add Allure to PATH
         shell: pwsh
-        run: | 
-            $allurePath = Join-Path $env:ProgramFiles "allure-${{ github.event.inputs.allureVersion }}\bin" 
+        run: |
+            # Define a platform-specific program files directory
+            if ($env:OS -eq "Windows_NT") {
+            $programFiles = $env:ProgramFiles
+            } else {
+              # Use a default path for non-Windows systems
+              $programFiles = "/usr/local"
+            }
+          
+          # Construct the allure path
+            $allurePath = Join-Path $programFiles "allure/bin"
+            
+            # Add the allure path to the system PATH
             $env:PATH = "$allurePath;$env:PATH"
-            echo $env:PATH
+            
+            # Output the updated PATH
+            Write-Output $env:PATH
       - name: Verify Allure Installation
         shell: pwsh
         run: |
