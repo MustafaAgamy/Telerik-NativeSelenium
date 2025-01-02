@@ -26,7 +26,8 @@ jobs:
         id: allure_version
         shell: pwsh
         run: |
-          $allure_version = Invoke-RestMethod -Uri ("https://api.github.com/repos/allure-framework/allure2/releases/latest").tag_name
+          $response = Invoke-RestMethod -Uri "https://api.github.com/repos/allure-framework/allure2/releases/latest"
+          $allure_version = $response.tag_name
           echo "Latest Allure version: $allure_version"
           echo "::set-output name=version::$allure_version"
       - name: Download Allure
