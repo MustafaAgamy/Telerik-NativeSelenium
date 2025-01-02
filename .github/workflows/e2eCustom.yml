@@ -57,7 +57,6 @@ jobs:
             $allurePath = Join-Path $programFiles "Allure\allure-$version\bin"
 
             # Add the allure path to the system PATH
-#            $env:PATH = "$allurePath;$env:PATH"
             $NewPath = (([Environment]::GetEnvironmentVariable("PATH", "User") -split ";") | ?{ $_ -and $_ -notlike "*\allure-*\bin" }) -join ";"
             [Environment]::SetEnvironmentVariable("PATH", "$NewPath;$allurePath", "User")
             # Output the updated PATH
