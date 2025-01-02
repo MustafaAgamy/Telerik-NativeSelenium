@@ -26,15 +26,15 @@ jobs:
         id: allure_version
         shell: pwsh
         run: |
-          $response = Invoke-RestMethod -Uri "https://api.github.com/repos/allure-framework/allure2/releases/latest"
-          $allure_version = $response.tag_name
+          $response = Invoke-RestMethod -Uri "https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/maven-metadata.xml"
+          $allure_version = $response.metadata.versioning.latest
           echo "Latest Allure version: $allure_version"
           echo "::set-output name=version::$allure_version"
       - name: Download Allure
         shell: pwsh
         run: |
             $version = "${{ steps.allure_version.outputs.version }}"
-            Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/$version/allure-$version.zip" -OutFile "allure.zip"
+            Invoke-WebRequest -Uri "https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/$version/allure-commandline-$version.zip" -OutFile "allure.zip"
       - name: Extract Allure
         shell: pwsh
         run: |
