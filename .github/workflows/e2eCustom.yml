@@ -38,33 +38,28 @@ jobs:
       - name: Extract Allure
         shell: pwsh
         run: |
-            # Determine the destination path
             if ($env:OS -eq "Windows_NT") {
                 $destinationPath = "$env:ProgramFiles\Allure"
             } else {
                 $destinationPath = "/usr/local/bin/allure"
             }
   
-            # Ensure the destination directory exists
             if (-not (Test-Path -Path $destinationPath)) {
                 New-Item -ItemType Directory -Path $destinationPath -Force
             }
   
-            # Extract the archive
             Expand-Archive -Path "allure.zip" -DestinationPath $destinationPath
             Write-Output "Allure has been extracted to $destinationPath"
       - name: Add Allure to PATH
         shell: pwsh
         run: |
-            # Define a platform-specific program files directory
             if ($env:OS -eq "Windows_NT") {
             $programFiles = $env:ProgramFiles
             } else {
-              # Use a default path for non-Windows systems
               $programFiles = "/usr/local"
             }
           
-          # Construct the allure path
+            # Construct the allure path
             $allurePath = Join-Path $programFiles "allure/bin"
             
             # Add the allure path to the system PATH
