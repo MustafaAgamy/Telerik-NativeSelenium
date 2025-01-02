@@ -70,12 +70,21 @@ jobs:
       - name: Verify Allure Installation
         shell: pwsh
         run: |
-            $allurePath = Join-Path $env:ProgramFiles "allure-${{ github.event.inputs.allureVersion }}\bin\allure.bat"
-            if (Test-Path $allurePath) {
-              Write-Host "Allure is correctly installed."
-            } else {
-              Write-Error "Allure command not found!"
-            }
+          # Check if the operating system is Windows
+          if ($env:OS -eq "Windows_NT") {
+          # Define the path for Windows
+          $allurePath = Join-Path $env:ProgramFiles "allure-\bin\allure.bat"
+          } else {
+            # Define the path for non-Windows (Linux or macOS)
+            $allurePath = "/usr/local/bin/allure/allure"
+          }
+        
+          # Check if the Allure executable exists
+          if (Test-Path $allurePath) {
+          Write-Host "Allure is correctly installed at $allurePath."
+          } else {
+            Write-Error "Allure command not found at $allurePath!"
+          }
   E2E_Chrome_Windows_Test:
     runs-on: windows-latest
     needs: preprocess
