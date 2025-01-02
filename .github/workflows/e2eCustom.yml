@@ -37,7 +37,22 @@ jobs:
             Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/$version/allure-$version.zip" -OutFile "allure.zip"
       - name: Extract Allure
         shell: pwsh
-        run: Expand-Archive -Path "allure.zip" -DestinationPath "$env:ProgramFiles"
+        run: |
+            # Determine the destination path
+            if ($env:OS -eq "Windows_NT") {
+                $destinationPath = "$env:ProgramFiles\Allure"
+            } else {
+                $destinationPath = "/usr/local/bin/allure"
+            }
+  
+            # Ensure the destination directory exists
+            if (-not (Test-Path -Path $destinationPath)) {
+                New-Item -ItemType Directory -Path $destinationPath -Force
+            }
+  
+            # Extract the archive
+            Expand-Archive -Path "allure.zip" -DestinationPath $destinationPath
+            Write-Output "Allure has been extracted to $destinationPath"
       - name: Add Allure to PATH
         shell: pwsh
         run: | 
