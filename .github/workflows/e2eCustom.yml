@@ -39,7 +39,7 @@ jobs:
         shell: pwsh
         run: |
             $version = "${{ steps.allure_version.outputs.version }}"
-            $destinationPath = "$(Build.SourcesDirectory)/allure"
+            $destinationPath = "${{ github.workspace }}/allure"
             if (-not (Test-Path -Path $destinationPath)) {
                 New-Item -ItemType Directory -Path $destinationPath -Force
             }
@@ -51,7 +51,7 @@ jobs:
         shell: pwsh
         run: |
             $version = "${{ steps.allure_version.outputs.version }}"
-            $destinationPath = "$(Build.SourcesDirectory)\allure\bin"
+            $destinationPath = "${{ github.workspace }}\allure\bin"
           
             $env:PATH = "$destinationPath;$env:PATH"
             Write-Output "Allure has been added to the PATH"
@@ -62,7 +62,7 @@ jobs:
           Write-Host "OS is Windows"
           
           # Define the path for Windows
-          $allurePath = "$(Build.SourcesDirectory)\Allure\allure-$version\bin\allure.bat"
+          $allurePath = "${{ github.workspace }}\Allure\allure-$version\bin\allure.bat"
 
           # Check if the Allure executable exists
           if (Test-Path $allurePath) {
