@@ -94,6 +94,15 @@ jobs:
         uses: stCarolas/setup-maven@v5
         with:
           maven-version: 3.9.6
+      - name: Check Allure Location
+        shell: pwsh
+        run: |
+           $allureLocation = Get-Command allure -ErrorAction SilentlyContinue
+           if ($null -ne $allureLocation) {
+               Write-Output "Allure is located at: $($allureLocation.Source)"
+           } else {
+               Write-Error "Allure is not found in the PATH!"
+           }
       - name: Run Tests on Chrome
         continue-on-error: true
         run: mvn test -DtargetBrowserName="chrome" -DexecutionAddress="local" -DtargetOperatingSystem="WINDOWS" -DheadlessExecution="true" -Dtest="${{ github.event.inputs.testsPath }}"
