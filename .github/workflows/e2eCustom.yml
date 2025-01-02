@@ -19,7 +19,7 @@ jobs:
       - name: Process Browser Input
         id: process
         run: |
-          #browsers= "${{ github.event.inputs.browsers }}"
+          #browsers="${{ github.event.inputs.browsers }}"
           echo "Selected browsers: $browsers"
           echo "::set-output name=selected::$browsers"
       - name: Get Latest Allure Version
