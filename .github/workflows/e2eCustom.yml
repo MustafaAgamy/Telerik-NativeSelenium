@@ -68,7 +68,7 @@ jobs:
           Write-Host "OS is Windows"
           
           # Define the path for Windows
-          $allurePath = Join-Path $env:ProgramFiles "allure\$version\bin\allure.bat"
+          $allurePath = Join-Path $env:ProgramFiles "Allure-$version\bin\allure.bat"
 
           # Check if the Allure executable exists
           if (Test-Path $allurePath) {
