@@ -12,7 +12,7 @@ on:
 
 jobs:
   preprocess:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     outputs:
       selected: ${{ steps.process.outputs.selected }}
     steps:
@@ -39,16 +39,10 @@ jobs:
         shell: pwsh
         run: |
             $version = "${{ steps.allure_version.outputs.version }}"
-            if ($env:OS -eq "Windows_NT") {
                 $destinationPath = "$env:ProgramFiles\Allure"
-            } else {
-                $destinationPath = "/usr/local/bin"
-            }
-  
             if (-not (Test-Path -Path $destinationPath)) {
                 New-Item -ItemType Directory -Path $destinationPath -Force
             }
-  
             Expand-Archive -Path "allure.zip" -DestinationPath $destinationPath
             $files = Get-ChildItem -Path $destinationPath
             $files | ForEach-Object { Write-Output $_.FullName }
@@ -57,35 +51,25 @@ jobs:
         shell: pwsh
         run: |
             $version = "${{ steps.allure_version.outputs.version }}"
-            if ($env:OS -eq "Windows_NT") {
             $programFiles = $env:ProgramFiles
-            } else {
-              $programFiles = "/usr/local"
-            }
-          
+
             # Construct the allure path
             $allurePath = Join-Path $programFiles "allure-$version/bin"
-            
+
             # Add the allure path to the system PATH
             $env:PATH = "$allurePath;$env:PATH"
-            
+
             # Output the updated PATH
             Write-Output $env:PATH
       - name: Verify Allure Installation
         shell: pwsh
         run: |
           $version = "${{ steps.allure_version.outputs.version }}"
-          if ($env:OS -eq "Windows_NT") {
           Write-Host "OS is Windows"
           
           # Define the path for Windows
           $allurePath = Join-Path $env:ProgramFiles "allure\$version\bin\allure.bat"
-          } else {
-          Write-Host "OS isn't windows"
-            # Define the path for non-Windows (Linux or macOS)
-            $allurePath = "/usr/local/bin/allure-$version/allure"
-          }
-        
+
           # Check if the Allure executable exists
           if (Test-Path $allurePath) {
           Write-Host "Allure is correctly installed at $allurePath."
