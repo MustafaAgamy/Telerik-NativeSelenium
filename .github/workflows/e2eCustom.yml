@@ -52,13 +52,14 @@ jobs:
         run: |
             $version = "${{ steps.allure_version.outputs.version }}"
             $programFiles = $env:ProgramFiles
-
+           
             # Construct the allure path
             $allurePath = Join-Path $programFiles "Allure\allure-$version\bin"
 
             # Add the allure path to the system PATH
-            $env:PATH = "$allurePath;$env:PATH"
-
+#            $env:PATH = "$allurePath;$env:PATH"
+            $NewPath = (([Environment]::GetEnvironmentVariable("PATH", "User") -split ";") | ?{ $_ -and $_ -notlike "*\allure-*\bin" }) -join ";"
+            [Environment]::SetEnvironmentVariable("PATH", "$NewPath;$allurePath", "User")
             # Output the updated PATH
             Write-Output $env:PATH
       - name: Verify Allure Installation
