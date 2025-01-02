@@ -25,6 +25,7 @@ jobs:
       - name: Get Latest Allure Version
         id: allure_version
         shell: pwsh
+        working-directory: ${{ github.workspace }}
         run: |
           $response = Invoke-RestMethod -Uri "https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/maven-metadata.xml"
           $allure_version = $response.metadata.versioning.latest
@@ -32,11 +33,13 @@ jobs:
           echo "::set-output name=version::$allure_version"
       - name: Download Allure
         shell: pwsh
+        working-directory: ${{ github.workspace }}
         run: |
             $version = "${{ steps.allure_version.outputs.version }}"
             Invoke-WebRequest -Uri "https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/$version/allure-commandline-$version.zip" -OutFile "allure.zip"
       - name: Extract Allure
         shell: pwsh
+        working-directory: ${{ github.workspace }}
         run: |
             $version = "${{ steps.allure_version.outputs.version }}"
             $destinationPath = "${{ github.workspace }}/allure"
@@ -49,6 +52,7 @@ jobs:
             Write-Output "Allure has been extracted to $destinationPath"
       - name: Add Allure to PATH
         shell: pwsh
+        working-directory: ${{ github.workspace }}
         run: |
             $version = "${{ steps.allure_version.outputs.version }}"
             $destinationPath = "${{ github.workspace }}\allure\bin"
@@ -57,6 +61,7 @@ jobs:
             Write-Output "Allure has been added to the PATH"
       - name: Verify Allure Installation
         shell: pwsh
+        working-directory: ${{ github.workspace }}
         run: |
           $version = "${{ steps.allure_version.outputs.version }}"
           Write-Host "OS is Windows"
@@ -90,6 +95,7 @@ jobs:
           maven-version: 3.9.6
       - name: Check Allure Location
         shell: pwsh
+        working-directory: ${{ github.workspace }}
         run: |
            $allureLocation = Get-Command allure -ErrorAction SilentlyContinue
            if ($null -ne $allureLocation) {
@@ -102,9 +108,11 @@ jobs:
         run: mvn test -DtargetBrowserName="chrome" -DexecutionAddress="local" -DtargetOperatingSystem="WINDOWS" -DheadlessExecution="true" -Dtest="${{ github.event.inputs.testsPath }}"
       - name: Generate Allure Report
         run: allure generate build/allure-results --single-file -o allure-report
+        working-directory: ${{ github.workspace }}
       - name: Upload Allure Report as Artifact
         uses: actions/upload-artifact@v3
         with:
+          working-directory: ${{ github.workspace }}
           name: Allure_Report
           path: allure-report/*
       # - name: Generate Allure Report
