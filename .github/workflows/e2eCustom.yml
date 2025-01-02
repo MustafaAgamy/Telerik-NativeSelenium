@@ -41,12 +41,8 @@ jobs:
             $version = "${{ steps.allure_version.outputs.version }}"
             if ($env:OS -eq "Windows_NT") {
                 $destinationPath = "$env:ProgramFiles\Allure"
-                $files = Get-ChildItem -Path $destinationPath
-                $files | ForEach-Object { Write-Output $_.FullName }
             } else {
                 $destinationPath = "/usr/local/bin"
-                $files = Get-ChildItem -Path $destinationPath
-                $files | ForEach-Object { Write-Output $_.FullName }
             }
   
             if (-not (Test-Path -Path $destinationPath)) {
@@ -54,6 +50,8 @@ jobs:
             }
   
             Expand-Archive -Path "allure.zip" -DestinationPath $destinationPath
+            $files = Get-ChildItem -Path $destinationPath
+            $files | ForEach-Object { Write-Output $_.FullName }
             Write-Output "Allure has been extracted to $destinationPath"
       - name: Add Allure to PATH
         shell: pwsh
