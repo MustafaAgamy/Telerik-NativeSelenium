@@ -44,7 +44,7 @@ jobs:
                 $files = Get-ChildItem -Path $destinationPath
                 $files | ForEach-Object { Write-Output $_.FullName }
             } else {
-                $destinationPath = "/usr/local/bin/allure"
+                $destinationPath = "/usr/local/bin"
                 $files = Get-ChildItem -Path $destinationPath
                 $files | ForEach-Object { Write-Output $_.FullName }
             }
