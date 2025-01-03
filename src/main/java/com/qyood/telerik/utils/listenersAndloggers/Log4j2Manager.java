@@ -138,7 +138,7 @@ public class Log4j2Manager {
 
         //Can be adjusted according to the expected stackTrace
         //MethodName to be printed to the console .e.g. -> Thread.currentThread().getStackTrace()[1].getMethodName()
-        logMessageWithLevel(ERROR, Thread.currentThread().getStackTrace()[2].getMethodName() + "\n", message);
+        logMessageWithLevel(ERROR, Thread.currentThread().getStackTrace()[2].getMethodName() + "\n", RED + message + RESET);
 
         // TO BE USED WITH CAUTION
         //Enable it if you want the execution to be marked as failed else keep it disabled
@@ -150,14 +150,14 @@ public class Log4j2Manager {
      * @Scope: This method is the to be used for FatalLevel Logs for all the logMessages,
      */
     public static void logFatalLogMessage(String... statements) {
-        logMessageWithLevel(FATAL, statements);
+        logMessageWithLevel(FATAL, RED + Arrays.toString(statements) + RESET);
     }
 
     /**
      * @Scope: This method is the to be used for WarnLevel Logs for all the logMessages,
      */
     public static void logWarnLogMessage(String... statements) {
-        logMessageWithLevel(WARN, statements);
+        logMessageWithLevel(WARN, YELLOW + Arrays.toString(statements) + RESET);
     }
 
     /**
