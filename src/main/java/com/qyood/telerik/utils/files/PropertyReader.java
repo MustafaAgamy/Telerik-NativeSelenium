@@ -1,4 +1,4 @@
-package com.qyood.telerik.utils;
+package com.qyood.telerik.utils.files;
 
 import java.io.FileInputStream;
 import java.io.IOException;

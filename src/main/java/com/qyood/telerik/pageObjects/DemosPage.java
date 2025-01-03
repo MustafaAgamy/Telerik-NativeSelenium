@@ -1,6 +1,6 @@
 package com.qyood.telerik.pageObjects;
 
-import com.qyood.telerik.utils.Actions;
+import com.qyood.telerik.utils.elements.Actions;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

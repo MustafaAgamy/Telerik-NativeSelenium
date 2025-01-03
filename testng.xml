@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Android Test Suite">
     <listeners>
-        <listener class-name="com.qyood.telerik.utils.TestListener"/>  <!-- the directory of the listeners class in the project-->
+        <listener class-name="com.qyood.telerik.utils.listenersAndloggers.TestListener"/>  <!-- the directory of the listeners class in the project-->
     </listeners>
     <test name="E2E Tests">
         <classes>

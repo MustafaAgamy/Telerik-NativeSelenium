@@ -1,4 +1,4 @@
-package com.qyood.telerik.utils;
+package com.qyood.telerik.utils.files;
 
 import io.restassured.path.json.JsonPath;
 

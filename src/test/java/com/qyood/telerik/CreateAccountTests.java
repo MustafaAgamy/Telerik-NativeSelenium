@@ -1,8 +1,8 @@
 package com.qyood.telerik;
 
-import com.qyood.telerik.utils.JsonReader;
+import com.qyood.telerik.utils.core.DriverFactory;
+import com.qyood.telerik.utils.files.JsonReader;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -21,33 +21,37 @@ public class CreateAccountTests {
         DemosPage demosPage = new DemosPage(driver);
         demosPage.navigate();
 
-        Assert.assertTrue(demosPage.getDemosPageTitle()
+        String demosPageTitle = demosPage.getDemosPageTitle();
+        Assert.assertTrue(demosPageTitle
                 .contains(testData.getJson("demosPageTitle")),
-                "Title of Current Page is: " + demosPage.getDemosPageTitle());
+                "Title of Current Page is: " + demosPageTitle);
 
         demosPage.getFreeTrial();
 
         GetFreeTrialPage getFreeTrialPage = new GetFreeTrialPage(driver);
 
-        Assert.assertTrue(getFreeTrialPage.getFreeTrialsPageTitle()
+        String getFreeTrialPageTitle = getFreeTrialPage.getFreeTrialsPageTitle();
+        Assert.assertTrue(getFreeTrialPageTitle
                         .contains(testData.getJson("freeTrialPageSubTitle")),
-                "Title of Current Page is: " + getFreeTrialPage.getFreeTrialsPageTitle());
+                "Title of Current Page is: " + getFreeTrialPageTitle);
 
         getFreeTrialPage.selectUiForReact();
 
         LoginPage loginPage = new LoginPage(driver);
 
-        Assert.assertTrue(loginPage.getLoginPageTitle()
+        String loginPageTitle = loginPage.getLoginPageTitle();
+        Assert.assertTrue(loginPageTitle
                         .contains(testData.getJson("loginPageTitle")),
-                "Title of Current Page is: " + loginPage.getLoginPageTitle());
+                "Title of Current Page is: " + loginPageTitle);
 
         loginPage.login(testData.getJson("email"));
 
         RegisterAccountPage registerAccountPage = new RegisterAccountPage(driver);
 
-        Assert.assertTrue(registerAccountPage.getRegisterPageTitle()
+        String registerAccountTitle = registerAccountPage.getRegisterPageTitle();
+        Assert.assertTrue(registerAccountTitle
                         .contains(testData.getJson("signUpPageTitle")),
-                "Title of Current Page is: " + registerAccountPage.getRegisterPageTitle());
+                "Title of Current Page is: " + registerAccountTitle);
 
         registerAccountPage.fillSignUpForm(
                 testData.getJson("password"), testData.getJson("firstName"),
@@ -57,13 +61,14 @@ public class CreateAccountTests {
 
     @BeforeMethod
     public void setUp() {
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
+        DriverFactory.setDriver(DriverFactory.BrowserType.CHROME);
+        driver = DriverFactory.getDriver();
+
         testData = new JsonReader("./src/test/resources/createAccountTests.json");
     }
 
     @AfterMethod
     public void tearDown() {
-        driver.quit();
+        DriverFactory.quitDriver();
     }
 }

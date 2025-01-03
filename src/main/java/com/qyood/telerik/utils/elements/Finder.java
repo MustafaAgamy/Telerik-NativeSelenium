@@ -1,4 +1,4 @@
-package com.qyood.telerik.utils;
+package com.qyood.telerik.utils.elements;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

@@ -1,5 +1,6 @@
-package com.qyood.telerik.utils;
+package com.qyood.telerik.utils.listenersAndloggers;
 
+import com.qyood.telerik.utils.files.PropertyReader;
 import org.apache.commons.lang3.SystemUtils;
 import org.testng.*;
 
@@ -10,7 +11,7 @@ public class TestListener implements ISuiteListener, IInvokedMethodListener, IEx
 
     @Override
     public void onExecutionStart() {
-        IExecutionListener.super.onExecutionStart();
+        AllureManager.setAllureEnvironment();
     }
 
     @Override
